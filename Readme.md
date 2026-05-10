@@ -7,8 +7,11 @@
 A **hands-on web security lab** to understand how Web Application Firewalls (WAFs) work in practice. It includes:
 
 **DVWA** (Damn Vulnerable Web App) — target application
+
 **ModSecurity + OWASP CRS** — open-source WAF
+
 **Custom Regex-Based WAF** — lightweight experimental WAF
+
 **Kali Linux container** — testing & attack environment
 
 
@@ -145,7 +148,6 @@ The custom WAF is built from:
 ./custom_waf/Dockerfile.waf
 ```
 
-It:
 
 * Uses **regex-based detection**
 * Blocks on **first match**
@@ -161,11 +163,7 @@ Access Kali shell:
 docker exec -it kali /bin/bash
 ```
 
-From there you can:
 
-* Send payloads (`curl`, scripts)
-* Run attack simulations
-* Test WAF behavior
 
 ---
 
