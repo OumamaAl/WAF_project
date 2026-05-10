@@ -1,6 +1,6 @@
----
-title: "Docker-Based WAF Lab: DVWA + ModSecurity + Custom WAF"
----
+
+# title: "Docker-Based WAF Lab: DVWA + ModSecurity + Custom WAF"
+
 
 
 
