@@ -1,0 +1,82 @@
+# version: "3.8"
+
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    networks:
+      - dvwa-net
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep apache2 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  waf:
+    image: owasp/modsecurity-crs:nginx
+    container_name: waf
+    networks:
+      - dvwa-net
+    ports:
+      - "8090:8080"
+    environment:
+        
+      - MODSEC_AUDIT_ENGINE=On                    
+      - MODSEC_AUDIT_LOG=/var/log/modsec/audit.log
+      - MODSEC_AUDIT_LOG_FORMAT=JSON
+      - MODSEC_AUDIT_LOG_PARTS=ABIJDEFHZ
+      - MODSEC_DEBUG_LOG=/var/log/modsec/debug.log
+      - MODSEC_DEBUG_LOGLEVEL=2                 
+      - MODSEC_BLOCKING_MODE=DETECTION_ONLY     
+      - BACKEND="http://dvwa"
+      - MODSEC_RULE_ENGINE=On
+      - PARANOIA=1
+    volumes:
+      - ./logs:/var/log/modsec
+      - ./nginx-logs:/var/log/nginx
+      # - ./crsRules:/etc/modsecurity.d/owasp-crs/rules/
+   
+
+
+  custom-waf:
+    build:
+      context: ./custom_waf
+      dockerfile: Dockerfile.waf
+    container_name: custom-waf
+    networks:
+      - dvwa-net
+    ports:
+      - "8070:8090"
+    depends_on:
+      - dvwa
+    volumes:
+      - waf-logs:/var/log/waf
+    restart: unless-stopped
+    
+  kali:
+
+    container_name: kali
+    networks:
+      - dvwa-net
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    tty: true
+    stdin_open: true
+    command: /bin/bash
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: dockerfile.kali
+
+networks:
+  dvwa-net:
+    driver: bridge
+
+
+volumes:
+  waf-logs:

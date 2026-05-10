@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+LABEL maintainer="wafproject"
+LABEL description="Custom WAF Python - Phase 3"
+
+WORKDIR /app
+
+COPY waf.py .
+COPY rules.py .
+
+RUN mkdir -p /var/log/waf
+
+EXPOSE 8090
+
+CMD ["python", "-u", "waf.py"]
