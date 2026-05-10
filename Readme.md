@@ -1,6 +1,8 @@
 ---
+title: "Docker-Based WAF Lab: DVWA + ModSecurity + Custom WAF"
+---
 
-#  Docker-Based WAF Lab: DVWA + ModSecurity + Custom WAF
+
 
 A **hands-on web security lab** to understand how Web Application Firewalls (WAFs) work in practice. It includes:
 
@@ -48,15 +50,30 @@ DVWA (target)
 
 ## Project Structure 
 ```
-.
-├── docker-compose.yml
-├── custom_waf/
-│   └── Dockerfile.waf
-├── crsRules/              # Custom OWASP CRS rules
-├── logs/
-├
-├── phase4.py              # Performance comparison script
-├── requirements.txt
+WAF-PROJECT/
+│
+├── attacks_FP_Tune/              # False positive testing payloads & tuning scripts
+│
+├── crsRules/                    # Custom OWASP CRS rules (used for ModSecurity WAF after startup)
+│
+├── custom_waf/                  # Custom WAF implementation
+│   ├── Dockerfile.waf           # Docker build file for custom WAF
+│   ├── rules.py                 # Regex-based detection rules
+│   └── waf.py                   # Core WAF logic (request inspection engine)
+│
+├── ModSecuritycfg/              # ModSecurity configuration
+│   ├── rulesCustomized/         # Custom ModSecurity rules ( only modified rule files )
+│   ├── crs-setup.conf           # CRS configuration (thresholds, paranoia level )
+│   └── modsecurity.conf         # Main ModSecurity engine configuration
+│
+├── docker-compose.yml           # Multi-container orchestration
+├── dockerfile.kali              # Kali container build file
+│
+├── phase4.py                    # Performance & comparison testing script
+│
+├── requirements.txt             # Python dependencies
+│
+└── Readme.md                    # Project documentation
 ```
 
 ---
